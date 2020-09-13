@@ -1,0 +1,9 @@
+- Adicionar novos tokens (por exemplo ; )
+- Melhorar tratamento de erro
+- Mudar forma de entrada
+- Identificar números
+- Identificar comentário e removê-los da fase de análise 
+- Identificar Operadores binários
+- Adicionar tabela de  símbolos
+- Implementar algoritmos de busca -  Tabela de simbolos
+

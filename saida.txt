@@ -1,0 +1,5 @@
+-----------------
+<'class',KEYWORD>
+<'Factorial',NAME>
+<'{',LCHAVES>
+<'}'RCHAVES>
