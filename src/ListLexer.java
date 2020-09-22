@@ -54,8 +54,8 @@ public class ListLexer extends Lexer {
                         return NAME();
                     if (isNUMBER())
                         return INTEGER_LITERAL();
-                    if ()
-                        return KEYWORD();
+                    /*if ()
+                        return KEYWORD();*/
                     throw new Error("invalid character: " + currentCharacter);
             }
         }
