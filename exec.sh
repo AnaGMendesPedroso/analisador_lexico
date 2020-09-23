@@ -1,4 +1,4 @@
 #!/bin/bash
-cd /home/gabrielkans/Documents/PersonalProjects/analisador_lexico
+cd /home/anapedroso/Downloads/Compiladores/analisador_lexico/class
 cd class
 java Main teste.txt
