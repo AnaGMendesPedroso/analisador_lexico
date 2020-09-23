@@ -15,7 +15,7 @@ public class Main {
         //ListLexer lexer = new ListLexer(args[0]);
         //File entrada = new File(/*scan.next()*/"teste.txt");
         try {
-            String content = Files.readString(Paths.get(args[0]));=
+            String content = Files.readString(Paths.get(args[0]));
             ListLexer lexer = new ListLexer(content);
             Token t = lexer.nextToken();
             while ( t.type != Lexer.EOF_TYPE ) {
