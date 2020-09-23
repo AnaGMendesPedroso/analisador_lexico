@@ -21,11 +21,20 @@ public class ListLexer extends Lexer {
     public static int LPAREN = 13;
     public static int RPAREN = 14;
     public static int SCOLON = 15;
-    public static int LCURLYBRA = 16;
-    public static int RCURLYBRA = 17;
+    public static int LBRACE = 16;
+    public static int RBRACE = 17;
+    public static int AND = 18;
+    public static int LESS = 19;
+    public static int HIGHER = 20;
+    public static int OR = 21;
+    public static int LEQ = 22;
+    public static int HEQ = 23;
+    public static int DIFF = 24;
+    public static int NOT = 25;
+    public static int EQUALS = 26;
 
     public static String[] tokenNames = { "n/a", "<EOF>", "IDENTIFIER", "COMMA", "LBRACK", "RBRACK" , "INTEGER_LITERAL", "KEYWORD", 
-                "PLUS", "MINUS", "TIMES", "DIVIDE", "ASSIGN","LPAREN","RPAREN","SCOLON","LCURLYBRA","RCURLYBRA"};
+            "PLUS", "MINUS", "TIMES", "DIVIDE", "ASSIGN","LPAREN","RPAREN","SCOLON","LBRACE","RBRACE","AND","LESS","HIGHER", "OR", "LEQ", "HEQ", "DIFF", "NOT", "EQUALS"};
 
     public String getTokenName(int x) {
         return tokenNames[x];
@@ -76,48 +85,135 @@ public class ListLexer extends Lexer {
                 case ',':
                     consume();
                     return new Token(COMMA, ",");
+
                 case '[':
                     consume();
                     return new Token(LBRACK, "[");
+
                 case ']':
                     consume();
                     return new Token(RBRACK, "]");
+
                 case '+':
                     consume();
                     return new Token(PLUS, "+");
+
                 case '-':
                     consume();
                     return new Token(MINUS, "-");
+
                 case '*':
                     consume();
                     return new Token(TIMES, "*");
+
                 case '/':
                     consume();
                     return new Token(DIVIDE, "/");
+
                 case '=':
-                    consume();
-                    return new Token(ASSIGN, "=");
+                    consume(); 
+                    if (currentCharacter == '=') {
+                        consume();
+                        return new Token(EQUALS, "==");
+                    }else if (isNUMBER() || isLETTER()){                        
+                        return new Token(ASSIGN, "=");
+                    }else if(currentCharacter == ' '){
+                        consume();
+                        if (isNUMBER() || isLETTER()){                        
+                            return new Token(ASSIGN, "=");
+                        }else{
+                            throw new Error("invalid character found: " + currentCharacter+" in line  ");
+                        }
+                    }else{
+                        throw new Error("invalid character found: " + currentCharacter+" in line  ");
+                    }
+
                 case '(':
                     consume();
                     return new Token(LPAREN, "(");
+
                 case ')':
                     consume();
                     return new Token(RPAREN, ")");
+
                 case ';':
                     consume();
-                    return new Token(SCOLON, ";");       
+                    return new Token(SCOLON, ";");
+
                 case '{':
                     consume();
-                    return new Token(LCURLYBRA, "{");  
+                    return new Token(LBRACE, "{");  
+
                 case '}':
                     consume();
-                    return new Token(RCURLYBRA, "}");  
+                    return new Token(RBRACE, "}");
+
+                case '&':
+                    consume();
+                    if (currentCharacter == '&'){
+                        consume();
+                        return new Token(AND, "&&");
+                    }else{
+                        throw new Error("invalid character found: " + currentCharacter+" in line  ");
+                    }
+
+                case '|'    :
+                    consume();
+                    if (currentCharacter == '|'){
+                        return new Token(OR, "||");
+                    }
+
+                case '<':
+                    consume();
+                    if (currentCharacter == '='){
+                        consume();
+                        return new Token(LEQ, "<=");
+                    }else if(currentCharacter == ' '){
+                        consume();
+                    }else if (isNUMBER() || isLETTER()){ 
+                        consume();
+                            return new Token(LESS, "<");
+                    }else{
+                            throw new Error("invalid character found: " + currentCharacter+" in line  ");
+                    }
+
+                case '>':
+                    consume();
+                    if (currentCharacter == '='){
+                        consume();
+                        return new Token(HEQ, ">=");
+                    }else if(currentCharacter==' '){
+                        consume();
+                    }else if(isNUMBER()||isLETTER()){
+                       return new Token(HIGHER, ">");
+                    }else{
+                      throw new Error("invalid character found: " + currentCharacter+" in line  ");
+                    }                   
+
+                case '!':
+                    consume();
+                    if (currentCharacter == '='){
+                        consume();
+                        return new Token(DIFF, "!=");
+                    }else if (isLETTER()) {
+                        return new Token(NOT, "!");
+                    }else if(currentCharacter == ' '){
+                        consume();
+                        if (isLETTER()) {
+                            return new Token(NOT, "!");
+                        }else{
+                            throw new Error("invalid character found: " + currentCharacter+" in line  ");
+                        }
+                    }else{
+                        throw new Error("invalid character found: " + currentCharacter+" in line  ");
+                    }
+                    
                 default:
                     if (isLETTER())
                         return IDENTIFIER();
                     if (isNUMBER())
                         return INTEGER_LITERAL();
-                    throw new Error("invalid character: " + currentCharacter);
+                    throw new Error("invalid character found: " + currentCharacter+" in line  ");
             }
         }
         return new Token(EOF_TYPE, "<EOF>");
