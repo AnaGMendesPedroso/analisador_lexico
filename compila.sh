@@ -1,4 +1,4 @@
 #!/bin/bash
-cd /home/anapedroso/Downloads/Compiladores/minijava/src
+cd /home/anapedroso/Downloads/Compiladores/analisador_lexico/src
 javac *.java
-mv *.class /home/anapedroso/Downloads/Compiladores/minijava/class
+mv *.class /home/anapedroso/Downloads/Compiladores/analisador_lexico/class

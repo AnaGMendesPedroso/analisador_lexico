@@ -1,2 +1,24 @@
-[a,b,c,1]
-a,ac, , , , 
+z<y
+Z > Y
+
+A < B
+c>d
+e > f
+g<=h
+i <= j
+k>=l
+m >= n
+o || p
+q ||r
+s!=t
+P != Q
+!P
+
+-------
+&
+|
+if
+&!
+P | Q
+P !=! Q
+!!P
