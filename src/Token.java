@@ -7,11 +7,12 @@
  * Visit http://www.pragmaticprogrammer.com/titles/tpdsl for more book information.
 ***/
 public class Token {
+    public int line;
     public int type;
     public String text;
-    public Token(int type, String text) {this.type=type; this.text=text;}
+    public Token(int line, int type, String text) {this.line=line;this.type=type; this.text=text;}
     public String toString() {
         String tname = ListLexer.tokenNames[type];
-        return "<'"+text+"',"+tname+">";
+        return "[ "+line+", "+tname+", \""+text+"\" ]";
     }
 }

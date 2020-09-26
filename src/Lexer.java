@@ -39,6 +39,10 @@ public abstract class Lexer {
     public int getCurrentCharacterPosition(){
         return this.p;
     }
+    public void returnCharacter(){
+        p--;
+        currentCharacter= input.charAt(p);
+    }
     
 
     /** Ensure x is next character on the input stream */

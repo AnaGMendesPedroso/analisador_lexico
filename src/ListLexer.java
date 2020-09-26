@@ -32,9 +32,11 @@ public class ListLexer extends Lexer {
     public static int DIFF = 24;
     public static int NOT = 25;
     public static int EQUALS = 26;
+    public static int DOT = 27;
 
-    public static String[] tokenNames = { "n/a", "<EOF>", "IDENTIFIER", "COMMA", "LBRACK", "RBRACK" , "INTEGER_LITERAL", "KEYWORD", 
-            "PLUS", "MINUS", "TIMES", "DIVIDE", "ASSIGN","LPAREN","RPAREN","SCOLON","LBRACE","RBRACE","AND","LESS","HIGHER", "OR", "LEQ", "HEQ", "DIFF", "NOT", "EQUALS"};
+    public static String[] tokenNames = { "n/a", "<EOF>", "IDENTIFIER", "COMMA", "LBRACK", "RBRACK", "INTEGER_LITERAL",
+            "KEYWORD", "PLUS", "MINUS", "TIMES", "DIVIDE", "ASSIGN", "LPAREN", "RPAREN", "SCOLON", "LBRACE", "RBRACE",
+            "AND", "LESS", "HIGHER", "OR", "LEQ", "HEQ", "DIFF", "NOT", "EQUALS", "DOT" };
 
     public String getTokenName(int x) {
         return tokenNames[x];
@@ -44,18 +46,22 @@ public class ListLexer extends Lexer {
         super(input);
     }
 
-    void ErrorHandler(){
-        throw new Error("Invalid character found: \"" + currentCharacter+"\" in line "+ getCurrentLine()+ " at Index "+getCurrentCharacterPosition());
+    void ErrorHandler() {
+        System.out.println("Linha: " + getCurrentLine() + " - Caractere ilegal: " + currentCharacter);
+    }
+
+    boolean isIGNOREDTOKEN() {
+        return currentCharacter == ' ' || currentCharacter == '\t' || currentCharacter == '\r';
     }
 
     boolean isLETTER() {
-        return currentCharacter >= 'a' && currentCharacter <= 'z' ||currentCharacter>= 'A' &&currentCharacter<= 'Z';
+        return currentCharacter >= 'a' && currentCharacter <= 'z' || currentCharacter >= 'A' && currentCharacter <= 'Z';
     }
 
     boolean isNUMBER() {
         return currentCharacter >= '0' && currentCharacter <= '9';
     }
-    
+
     /** NAME : ('a'..'z'|'A'..'Z')+; // NAME is sequence of >=1 letter */
     Token IDENTIFIER() {
         StringBuilder buf = new StringBuilder();
@@ -63,25 +69,28 @@ public class ListLexer extends Lexer {
             buf.append(currentCharacter);
             consume();
         } while (isLETTER());
-        return new Token(IDENTIFIER, buf.toString());
+        return new Token(getCurrentLine(), IDENTIFIER, buf.toString());
     }
 
-
-    // INTEGER_LITERAL : [0..9]+[0..9]* 
+    // INTEGER_LITERAL : [0..9]+[0..9]*
     Token INTEGER_LITERAL() {
         StringBuilder buf = new StringBuilder();
         do {
             buf.append(currentCharacter);
             consume();
         } while (isNUMBER());
-        return new Token(INTEGER_LITERAL, buf.toString());
+        return new Token(getCurrentLine(), INTEGER_LITERAL, buf.toString());
     }
 
     public Token nextToken() {
         while (currentCharacter != EOF) {
             switch (currentCharacter) {
                 case ' ':
+                    WS();
+                    continue;
                 case '\t':
+                    WS();
+                    continue;
                 case '\n':
                     newLine();
                 case '\r':
@@ -89,144 +98,147 @@ public class ListLexer extends Lexer {
                     continue;
                 case ',':
                     consume();
-                    return new Token(COMMA, ",");
+                    return new Token(getCurrentLine(), COMMA, ",");
 
                 case '[':
                     consume();
-                    return new Token(LBRACK, "[");
+                    return new Token(getCurrentLine(), LBRACK, "[");
 
                 case ']':
                     consume();
-                    return new Token(RBRACK, "]");
+                    return new Token(getCurrentLine(), RBRACK, "]");
 
                 case '+':
                     consume();
-                    return new Token(PLUS, "+");
+                    return new Token(getCurrentLine(), PLUS, "+");
 
                 case '-':
                     consume();
-                    return new Token(MINUS, "-");
+                    return new Token(getCurrentLine(), MINUS, "-");
 
                 case '*':
                     consume();
-                    return new Token(TIMES, "*");
+                    return new Token(getCurrentLine(), TIMES, "*");
 
                 case '/':
                     consume();
-                    return new Token(DIVIDE, "/");
+                    return new Token(getCurrentLine(), DIVIDE, "/");
+                case '.':
+                    consume();
+                    return new Token(getCurrentLine(), DOT, ".");
 
                 case '=':
-                    consume(); 
+                    consume();
                     if (currentCharacter == '=') {
                         consume();
-                        return new Token(EQUALS, "==");
-                    }else if (isNUMBER() || isLETTER()){                        
-                        return new Token(ASSIGN, "=");
-                    }else if(currentCharacter == ' '){
+                        return new Token(getCurrentLine(), EQUALS, "==");
+                    } else if (isNUMBER() || isLETTER()) {
+                        return new Token(getCurrentLine(), ASSIGN, "=");
+                    } else if (currentCharacter == ' ') {
                         consume();
-                        if (isNUMBER() || isLETTER()){                        
-                            return new Token(ASSIGN, "=");
-                        }else{
-                             ErrorHandler();
+                        if (isNUMBER() || isLETTER()) {
+                            return new Token(getCurrentLine(), ASSIGN, "=");
+                        } else {
+                            ErrorHandler();
+                            consume();
                         }
-                    }else{
-                         ErrorHandler();
+                    } else {
+                        ErrorHandler();
+                        consume();
                     }
 
                 case '(':
                     consume();
-                    return new Token(LPAREN, "(");
+                    return new Token(getCurrentLine(), LPAREN, "(");
 
                 case ')':
                     consume();
-                    return new Token(RPAREN, ")");
+                    return new Token(getCurrentLine(), RPAREN, ")");
 
                 case ';':
                     consume();
-                    return new Token(SCOLON, ";");
+                    return new Token(getCurrentLine(), SCOLON, ";");
 
                 case '{':
                     consume();
-                    return new Token(LBRACE, "{");  
+                    return new Token(getCurrentLine(), LBRACE, "{");
 
                 case '}':
                     consume();
-                    return new Token(RBRACE, "}");
+                    return new Token(getCurrentLine(), RBRACE, "}");
 
                 case '&':
                     consume();
-                    if (currentCharacter == '&'){
+                    if (currentCharacter == '&') {
                         consume();
-                        return new Token(AND, "&&");
-                    }else{
-                         ErrorHandler();
+                        return new Token(getCurrentLine(), AND, "&&");
+                    } else {
+                        returnCharacter();
+                        ErrorHandler();
                     }
-
-                case '|'    :
-                    consume();
-                    if (currentCharacter == '|'){
-                        return new Token(OR, "||");
-                    }
-
+                    // "||" não existe na gramatica
+                    /*
+                     * case '|': consume(); if (currentCharacter != '|') { consume(); return new
+                     * Token(getCurrentLine(), OR, "||"); } else { returnCharacter();
+                     * ErrorHandler(); consume(); }
+                     */
                 case '<':
                     consume();
-                    if (currentCharacter == '='){
-                        consume();
-                        return new Token(LEQ, "<=");
-                    }else if(currentCharacter == ' '){
-                        consume();
-                    }else if (isNUMBER() || isLETTER()){ 
-                        consume();
-                            return new Token(LESS, "<");
-                    }else{
-                             ErrorHandler();
-                    }
+                    return new Token(getCurrentLine(), LESS, "<");
+                /*
+                 * 
+                 * if (currentCharacter == '=') { consume(); return new Token(getCurrentLine(),
+                 * LEQ, "<="); } while (isIGNOREDTOKEN()) { consume(); } if (isNUMBER() ||
+                 * isLETTER()) { return new Token(getCurrentLine(), LESS, "<"); } else {
+                 * ErrorHandler(); consume(); }
+                 */
 
                 case '>':
                     consume();
-                    if (currentCharacter == '='){
-                        consume();
-                        return new Token(HEQ, ">=");
-                    }else if(currentCharacter==' '){
-                        consume();
-                    }else if(isNUMBER()||isLETTER()){
-                       return new Token(HIGHER, ">");
-                    }else{
-                       ErrorHandler();
-                    }                   
+                    return new Token(getCurrentLine(), HIGHER, ">");
+
+                /*
+                 * if (currentCharacter == '=') { consume(); return new Token(getCurrentLine(),
+                 * HEQ, ">="); } while (isIGNOREDTOKEN()) { consume(); } if (isNUMBER() ||
+                 * isLETTER()) { return new Token(getCurrentLine(), HIGHER, ">"); } else {
+                 * ErrorHandler(); consume(); }
+                 */
 
                 case '!':
                     consume();
-                    if (currentCharacter == '='){
+                    if (currentCharacter == '=') {
                         consume();
-                        return new Token(DIFF, "!=");
-                    }else if (isLETTER()) {
-                        return new Token(NOT, "!");
-                    }else if(currentCharacter == ' '){
-                        consume();
-                        if (isLETTER()) {
-                            return new Token(NOT, "!");
-                        }else{
-                             ErrorHandler();
-                        }
-                    }else{
-                         ErrorHandler();
+                        return new Token(getCurrentLine(), DIFF, "!=");
                     }
-                    
+                    while (isIGNOREDTOKEN()) {
+                        consume();
+                    }
+                    if (isLETTER()) {
+                        return new Token(getCurrentLine(), NOT, "!");
+                    } else {
+                        while (currentCharacter != '!') {
+                            returnCharacter();
+                        }
+                        ErrorHandler();
+                        consume();
+                    }
+
                 default:
                     if (isLETTER())
                         return IDENTIFIER();
                     if (isNUMBER())
                         return INTEGER_LITERAL();
-                     ErrorHandler();
+                    ErrorHandler();
+                    consume();
             }
         }
-        return new Token(EOF_TYPE, "<EOF>");
+        return new Token(getCurrentLine(), EOF_TYPE, "<EOF>");
     }
-        
+
     /** WS : (' '|'\t'|'\n'|'\r')* ; // ignore any whitespace */
     void WS() {
-        while (currentCharacter == ' ' ||currentCharacter== '\t' ||currentCharacter== '\n' ||currentCharacter== '\r')
+        while (currentCharacter == ' ' || currentCharacter == '\t' || currentCharacter == '\n'
+                || currentCharacter == '\r')
             consume();
     }
 }
