@@ -187,6 +187,10 @@ public class ListLexer extends Lexer {
           return new Token(getCurrentLine(), TIMES, "*");
         case '/':
           consume();
+          if (currentCharacter == '/') {
+            consume();
+            newLine();
+          }
           return new Token(getCurrentLine(), DIVIDE, "/");
         case '.':
           consume();
