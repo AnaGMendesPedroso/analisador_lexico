@@ -1,4 +1,5 @@
 #!/bin/bash
-cd /home/gabrielkans/Documents/PersonalProjects/analisador_lexico/src
+PWD=$(pwd)
+cd "$PWD"/src
 javac *.java
-mv *.class /home/gabrielkans/Documents/PersonalProjects/analisador_lexico/class
+mv *.class ../class

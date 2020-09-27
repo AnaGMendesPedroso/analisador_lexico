@@ -1,4 +1,4 @@
 #!/bin/bash
-cd /home/gabrielkans/Documents/PersonalProjects/analisador_lexico
-cd class
-java Main teste.txt
+PWD=$(pwd)
+cd "$PWD"/class
+java Main programa_exemplo.txt
