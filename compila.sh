@@ -1,4 +1,4 @@
 #!/bin/bash
-cd /home/anapedroso/Downloads/Compiladores/analisador_lexico/src
+cd /home/gabrielkans/Documents/PersonalProjects/analisador_lexico/src
 javac *.java
-mv *.class /home/anapedroso/Downloads/Compiladores/analisador_lexico/class
+mv *.class /home/gabrielkans/Documents/PersonalProjects/analisador_lexico/class
