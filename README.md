@@ -3,8 +3,11 @@ por exemplo, se o projeto foi armazenado no diretório ~/Downloads/Compiladores/
 precisamos que o senhor esteja no diretório analisador_lexico para começarmos.
 
 `anapedroso@anapedroso-PC:~/Downloads/Compiladores/Trabalhos/analisador_lexico$ chmod +x compila.sh`
+
 `anapedroso@anapedroso-PC:~/Downloads/Compiladores/Trabalhos/analisador_lexico$ chmod +x exec.sh`
+
 `anapedroso@anapedroso-PC:~/Downloads/Compiladores/Trabalhos/analisador_lexico$ ./compila.sh`
+
 `anapedroso@anapedroso-PC:~/Downloads/Compiladores/Trabalhos/analisador_lexico$ ./exec.sh`
 
 A análise léxia é feita a partir do arquivo que passamos como parâmetro de execução no arquivo exec.sh na linha 4:
