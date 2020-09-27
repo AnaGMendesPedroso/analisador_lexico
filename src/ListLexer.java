@@ -92,9 +92,12 @@ public class ListLexer extends Lexer {
                     WS();
                     continue;
                 case '\n':
+                    consume();
                     newLine();
+                    continue;
                 case '\r':
-                    WS();
+                    consume();
+                    newLine();
                     continue;
                 case ',':
                     consume();
@@ -237,8 +240,7 @@ public class ListLexer extends Lexer {
 
     /** WS : (' '|'\t'|'\n'|'\r')* ; // ignore any whitespace */
     void WS() {
-        while (currentCharacter == ' ' || currentCharacter == '\t' || currentCharacter == '\n'
-                || currentCharacter == '\r')
+        while (currentCharacter == ' ' || currentCharacter == '\t')
             consume();
     }
 }
