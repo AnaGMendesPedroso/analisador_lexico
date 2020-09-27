@@ -7,53 +7,50 @@
  * information.
  ***/
 public abstract class Lexer {
-    public static final char EOF = (char) -1; // represent end of file char
-    public static final int EOF_TYPE = 1; // represent EOF token type
-    String input; // input string
-    int p = 0; // index into input of current character
-    int currentLine =0;
-    char currentCharacter; // current character
+  public static final char EOF = (char) -1; // represent end of file char
+  public static final int EOF_TYPE = 1; // represent EOF token type
+  String input; // input string
+  int p = 0; // index into input of current character
+  int currentLine = 0;
+  char currentCharacter; // current character
 
-    public Lexer(String input) {
-        this.input = input;
-       currentCharacter= input.charAt(p); // prime lookahead
-    }
+  public Lexer(String input) {
+    this.input = input;
+    currentCharacter = input.charAt(p); // prime lookahead
+  }
 
-    /** Move one character; detect "end of file" */
-    public void consume() {
-        p++;
-        if (p >= input.length())
-           currentCharacter= EOF;
-        else
-           currentCharacter= input.charAt(p);
-    }
+  /** Move one character; detect "end of file" */
+  public void consume() {
+    p++;
+    if (p >= input.length()) currentCharacter = EOF; else currentCharacter =
+      input.charAt(p);
+  }
 
-    public void newLine(){
-        this.currentLine++;
-    }
+  public void newLine() {
+    this.currentLine++;
+  }
 
-    public int getCurrentLine(){
-        return this.currentLine;
-    }
-    
-    public int getCurrentCharacterPosition(){
-        return this.p;
-    }
-    public void returnCharacter(){
-        p--;
-        currentCharacter= input.charAt(p);
-    }
-    
+  public int getCurrentLine() {
+    return this.currentLine;
+  }
 
-    /** Ensure x is next character on the input stream */
-    public void match(char x) {
-        if (currentCharacter == x)
-            consume();
-        else
-            throw new Error("expecting " + x + "; found " + currentCharacter);
-    }
+  public int getCurrentCharacterPosition() {
+    return this.p;
+  }
 
-    public abstract Token nextToken();
+  public void returnCharacter() {
+    p--;
+    currentCharacter = input.charAt(p);
+  }
 
-    public abstract String getTokenName(int tokenType);
+  /** Ensure x is next character on the input stream */
+  public void match(char x) {
+    if (currentCharacter == x) consume(); else throw new Error(
+      "expecting " + x + "; found " + currentCharacter
+    );
+  }
+
+  public abstract Token nextToken();
+
+  public abstract String getTokenName(int tokenType);
 }
