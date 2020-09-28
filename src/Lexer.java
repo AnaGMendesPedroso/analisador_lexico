@@ -11,7 +11,7 @@ public abstract class Lexer {
   public static final int EOF_TYPE = 1; // represent EOF token type
   String input; // input string
   int p = 0; // index into input of current character
-  int currentLine = 0;
+  int currentLine = 1;
   char currentCharacter; // current character
 
   public Lexer(String input) {

@@ -213,16 +213,6 @@ public class ListLexer extends Lexer {
         case '}':
           consume();
           return new Token(getCurrentLine(), RBRACE, "}");
-        case '&':
-          consume();
-          if (currentCharacter == '&') {
-            consume();
-            return new Token(getCurrentLine(), AND, "&&");
-          } else {
-            returnCharacter();
-            ErrorHandler();
-            consume();
-          }
         case '<':
           consume();
           return new Token(getCurrentLine(), LESS, "<");
@@ -234,10 +224,19 @@ public class ListLexer extends Lexer {
           return new Token(getCurrentLine(), NOT, "!");
         case '?':
           consume();
+          return new Token(getCurrentLine(),KEYWORD,"?");
+        case '&':
+          consume();
+          if (currentCharacter == '&') {
+            consume();
+            return new Token(getCurrentLine(), AND, "&&");
+          } else {
+            returnCharacter();
+            ErrorHandler();
+        }
         default:
           if (isLETTER()) return IDENTIFIER();
           if (isNUMBER()) return INTEGER_LITERAL();
-          ErrorHandler();
           consume();
       }
     }
